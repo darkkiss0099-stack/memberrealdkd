@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEDKORDON - Members Roster</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Space+Mono:wght@400;700&family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #030303;
+            color: #e0e0e0;
+            font-family: 'Space Mono', 'Kanit', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Rain Animation Background --- */
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .drop {
+            position: absolute;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.2));
+            width: 1px;
+            height: 80px;
+            top: -100px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Header Section --- */
+        .main-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .main-header h1 {
+            font-family: 'Black Ops One', cursive;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: #fff;
+            letter-spacing: 12px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .main-header .sub-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: -10px;
+        }
+
+        .main-header .line {
+            height: 1px;
+            width: 150px;
+            background: linear-gradient(to left, #444, transparent);
+        }
+
+        .main-header h2 {
+            font-size: 1rem;
+            color: #444;
+            letter-spacing: 6px;
+            margin: 0;
+        }
+
+        /* --- Section Wrapper (หัวข้อ + ค้นหา วางตรงข้ามกัน) --- */
+        .section-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 60px 0 20px;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 15px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            margin: 0;
+        }
+
+        .section-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            color: #fff;
+            letter-spacing: 3px;
+        }
+
+        .section-header span {
+            font-size: 0.9rem;
+            color: #333;
+            margin-left: 15px;
+        }
+
+        /* Search Input Styling */
+        .search-container {
+            position: relative;
+        }
+
+        .search-container input {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 5px;
+            padding: 8px 15px 8px 35px;
+            color: #fff;
+            font-family: 'Space Mono', sans-serif;
+            width: 250px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-container input:focus {
+            border-color: #f7a322;
+            box-shadow: 0 0 10px rgba(247, 163, 34, 0.1);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #444;
+            font-size: 0.9rem;
+        }
+
+        /* --- Grid Layout (3 คอลัมน์) --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .member-card {
+            background-color: rgba(13, 13, 13, 0.85);
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            transition: 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .member-card.hidden {
+            display: none;
+        }
+
+        .member-card.founder { border-color: #f7a32240; }
+        .member-card.leader { border-color: #e74c3c40; }
+        .member-card.member { border-color: #ffffff08; }
+
+        .member-card:hover {
+            background-color: rgba(22, 22, 22, 0.95);
+            transform: translateY(-3px);
+            border-color: #555;
+        }
+
+        /* Profile Frame Fix (พอดีกรอบ) */
+        .avatar-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            border: 1px solid #222;
+            overflow: hidden; /* บังคับรูปไม่ให้ล้นกรอบ */
+        }
+
+        .member-avatar {
+            width: 100%;
+            height: 100%;
+            background-image: url('https://img5.pic.in.th/file/secure-sv1/Untitled-2b13b6916ef20d67c.png');
+            background-size: cover; /* ขยายรูปให้เต็มกรอบโดยไม่เสียสัดส่วน */
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            width: 8px;
+            height: 8px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            border: 1.5px solid #0d0d0d;
+            box-shadow: 0 0 5px #2ecc71;
+            z-index: 2;
+        }
+
+        .member-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .role-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 2px;
+        }
+
+        .founder-label { color: #f7a322; }
+        .leader-label { color: #e74c3c; }
+        .member-label { color: #666; }
+
+        .member-name {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .facebook-link {
+            text-decoration: none;
+            color: #0084ff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .system-design {
+            text-align: center;
+            margin-top: 100px;
+            font-size: 0.7rem;
+            color: #1a1a1a;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 700px) { 
+            .grid { grid-template-columns: 1fr; }
+            .section-wrapper { flex-direction: column; align-items: flex-start; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rain" id="rainContainer"></div>
+
+    <div class="container">
+        <div class="main-header">
+            <h1>DEDKORDON</h1>
+            <div class="sub-text">
+                <div class="line"></div>
+                <h2>DEDKORDON MEMBERS</h2>
+                <div class="line" style="background: linear-gradient(to right, #444, transparent);"></div>
+            </div>
+        </div>
+
+        <div class="section-wrapper">
+            <div class="section-header">
+                <h3>FOUNDERS</h3>
+                <span>/ 01</span>
+            </div>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="memberSearch" placeholder="SEARCH MEMBERS..." onkeyup="searchFunction()">
+            </div>
+        </div>
+        <div class="grid" id="founderGrid">
+            <div class="member-card founder">
+                <div class="avatar-container"><div class="member-avatar"></div><div class="status-dot"></div></div>
+                <div class="member-info">
+                    <span class="role-label founder-label"><i class="fas fa-crown"></i> FOUNDER</span>
+                    <h4 class="member-name">Zigar Dedkordon</h4>
+                    <a href="https://www.facebook.com/zigar.Dereck.2024?locale=th_TH" class="facebook-link">Facebook</a>
+                </div>
+            </div>
+            <div class="member-card founder">
+                <div class="avatar-container"><div class="member-avatar"></div><div class="status-dot"></div></div>
+                <div class="member-info">
+                    <span class="role-label founder-label"><i class="fas fa-crown"></i> FOUNDER</span>
+                    <h4 class="member-name">Oshi Dedkordon</h4>
+                    <a href="https://www.facebook.com/tsumaki.tsunaji.342?locale=th_TH" class="facebook-link">Facebook</a>
+                </div>
+            </div>
+            <div class="member-card founder">
+                <div class="avatar-container"><div class="member-avatar"></div><div class="status-dot"></div></div>
+                <div class="member-info">
+                    <span class="role-label founder-label"><i class="fas fa-crown"></i> FOUNDER</span>
+                    <h4 class="member-name">Fix Dedkordon</h4>
+                    <a href="https://www.facebook.com/dept.banchamek?locale=th_TH" class="facebook-link">Facebook</a>
+                </div>
+            </div>
+            <div class="member-card founder">
+                <div class="avatar-container"><div class="member-avatar"></div><div class="status-dot"></div></div>
+                <div class="member-info">
+                    <span class="role-label founder-label"><i class="fas fa-crown"></i> FOUNDER</span>
+                    <h4 class="member-name">Patrick Dedkordon</h4>
+                    <a href="https://www.facebook.com/patrickdereck2k26?locale=th_TH" class="facebook-link">Facebook</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-wrapper">
+            <div class="section-header">
+                <h3>LEADERS</h3>
+                <span>/ 02</span>
+            </div>
+        </div>
+        <div class="grid" id="leaderGrid">
+            <div class="member-card leader">
+                <div class="avatar-container"><div class="member-avatar"></div><div class="status-dot"></div></div>
+                <div class="member-info">
+                    <span class="role-label leader-label"><i class="fas fa-crown"></i> LEADER</span>
+                    <h4 class="member-name">Panompiee Dedkordon</h4>
+                    <a href="https://www.facebook.com/nongkanom.gml" class="facebook-link">Facebook</a>
+                </div>
+            </div>
+<div class="member-card leader">
+    <div class="avatar-container">
+        <div class="member-avatar"></div>
+        <div class="status-dot"></div>
+    </div>
+    <div class="member-info">
+        <span class="role-label leader-label"><i class="fas fa-crown"></i> LEADER</span>
+        <h4 class="member-name">Pakkad Dedkordon</h4>
+        <a href="https://www.facebook.com/iisawakojang" class="facebook-link">Facebook</a>
+    </div>
+</div>
+        </div>
+
+        <div class="section-wrapper">
+            <div class="section-header">
+                <h3>MEMBERS</h3>
+                <span>/ 03</span>
+            </div>
+        </div>
+        <div class="grid" id="memberGrid">
+            <div class="member-card member">
+                <div class="avatar-container"><div class="member-avatar"></div><div class="status-dot"></div></div>
+                <div class="member-info">
+                    <span class="role-label member-label">MEMBER</span>
+                    <h4 class="member-name">Nöngchĕrs Dedkordon</h4>
+                    <a href="https://www.facebook.com/misshim.o0?locale=th_TH" class="facebook-link">Facebook</a>
+                </div>
+            </div>
+            <div class="member-card member">
+                <div class="avatar-container"><div class="member-avatar"></div><div class="status-dot"></div></div>
+                <div class="member-info">
+                    <span class="role-label member-label">MEMBER</span>
+                    <h4 class="member-name">Ta Dedkordon</h4>
+                    <a href="https://www.facebook.com/ta.dedkordon" class="facebook-link">Facebook</a>
+                </div>
+            </div>
+            <div class="member-card member">
+                <div class="avatar-container"><div class="member-avatar"></div><div class="status-dot"></div></div>
+                <div class="member-info">
+                    <span class="role-label member-label">MEMBER</span>
+                    <h4 class="member-name">Freya Dedkordon</h4>
+                    <a href="https://www.facebook.com/sotia.sotia.2025" class="facebook-link">Facebook</a>
+                </div>
+            </div>
+            <div class="member-card member">
+                <div class="avatar-container"><div class="member-avatar"></div><div class="status-dot"></div></div>
+                <div class="member-info">
+                    <span class="role-label member-label">MEMBER</span>
+                    <h4 class="member-name">Shimon Dedkordon</h4>
+                    <a href="https://www.facebook.com/DekmonStepdek" class="facebook-link">Facebook</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="system-design">SYSTEM DESIGN BY OSHI</div>
+    </div>
+
+    <script>
+        function createRain() {
+            const container = document.getElementById('rainContainer');
+            const dropCount = 100;
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('drop');
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                drop.style.animationDelay = Math.random() * 2 + 's';
+                drop.style.opacity = Math.random() * 0.2;
+                container.appendChild(drop);
+            }
+        }
+
+        function searchFunction() {
+            const input = document.getElementById('memberSearch');
+            const filter = input.value.toUpperCase();
+            const cards = document.getElementsByClassName('member-card');
+
+            for (let i = 0; i < cards.length; i++) {
+                const name = cards[i].getElementsByClassName('member-name')[0];
+                if (name.innerText.toUpperCase().indexOf(filter) > -1) {
+                    cards[i].classList.remove('hidden');
+                } else {
+                    cards[i].classList.add('hidden');
+                }
+            }
+        }
+
+        createRain();
+    </script>
+</body>
+</html>
