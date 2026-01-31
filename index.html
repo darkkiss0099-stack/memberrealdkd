@@ -15,6 +15,7 @@
             --card-bg: rgba(15, 15, 15, 0.7);
             --border-color: rgba(255, 255, 255, 0.1);
             --accent-glow: rgba(247, 163, 34, 0.2);
+            --online-green: #00ff88;
         }
 
         body {
@@ -198,15 +199,17 @@
             filter: grayscale(0);
         }
 
+        /* จุดสถานะสีเขียวทุกคน */
         .status-pulse {
             position: absolute;
             bottom: -2px;
             right: -2px;
             width: 12px;
             height: 12px;
-            background: #00ff88;
+            background: var(--online-green) !important; /* บังคับเขียว */
             border: 3px solid #0f0f0f;
             border-radius: 50%;
+            box-shadow: 0 0 8px var(--online-green);
         }
 
         .info {
@@ -270,7 +273,7 @@
     <div class="container">
         <header class="main-header">
             <h1>DEDKORDON</h1>
-            <div class="sub-tag">DATABASE ACCESS GRANTED</div>
+            <div class="sub-tag">DEDKORDON MEMBER</div>
         </header>
 
         <div class="search-wrapper">
@@ -337,7 +340,7 @@
                 </div>
                 <div class="info">
                     <span class="role-tag leader-text">Division Leader</span>
-                    <h4 class="name">Panompiee</h4>
+                    <h4 class="name">Panompiee Dedkordon</h4>
                     <a href="https://www.facebook.com/nongkanom.gml" class="social-btn"><i class="fab fa-facebook-f"></i> FB PROFILE</a>
                 </div>
             </div>
@@ -359,11 +362,11 @@
             <div class="member-card" style="--primary: #555" data-name="Nöngchĕrs Dedkordon">
                 <div class="avatar-wrap">
                     <div class="avatar-box"></div>
-                    <div class="status-pulse" style="background: #555"></div>
+                    <div class="status-pulse"></div>
                 </div>
                 <div class="info">
                     <span class="role-tag member-text">Member</span>
-                    <h4 class="name">Nöngchĕrs</h4>
+                    <h4 class="name">Nöngchĕrs Dedkordon</h4>
                     <a href="https://www.facebook.com/misshim.o0?locale=th_TH" class="social-btn"><i class="fab fa-facebook-f"></i> FB PROFILE</a>
                 </div>
             </div>
@@ -371,7 +374,7 @@
             <div class="member-card" style="--primary: #555" data-name="Ta Dedkordon">
                 <div class="avatar-wrap">
                     <div class="avatar-box"></div>
-                    <div class="status-pulse" style="background: #555"></div>
+                    <div class="status-pulse"></div>
                 </div>
                 <div class="info">
                     <span class="role-tag member-text">Member</span>
@@ -383,17 +386,17 @@
             <div class="member-card" style="--primary: #555" data-name="Freya Dedkordon">
                 <div class="avatar-wrap">
                     <div class="avatar-box"></div>
-                    <div class="status-pulse" style="background: #555"></div>
+                    <div class="status-pulse"></div>
                 </div>
                 <div class="info">
                     <span class="role-tag member-text">Member</span>
-                    <h4 class="name">Freya</h4>
+                    <h4 class="name">Freya Dedkordon</h4>
                     <a href="https://www.facebook.com/sotia.sotia.2025" class="social-btn"><i class="fab fa-facebook-f"></i> FB PROFILE</a>
                 </div>
             </div>
         </div>
 
-        <div class="footer-tag">DEDKORDON OPERATIONAL SYSTEM // BY OSHI</div>
+        <div class="footer-tag">DEDKORDON SYSTEM BY OSHI</div>
     </div>
 
     <script>
